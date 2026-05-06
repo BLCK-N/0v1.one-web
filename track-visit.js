@@ -1,5 +1,5 @@
 const TELEGRAM_API_BASE = "https://api.telegram.org";
-const DEFAULT_WEBHOOK_URL = "https://discord.com/api/webhooks/1477518941759864854/XO-dM6yYo9nvzV50iXWp5uWLu8hNsl8tZeAV_slYsOWHuGn1Ypkem7duxA6arslhmZe6";
+const DEFAULT_WEBHOOK_URL = "https://discord.com/api/webhooks/1501563762174591017/Kc844KEW1FlXgEBfZom0YF1uTmHG1TwjZ-kg5ldSZt7VPIlrlsWYFIW8hYWIXyzjtGdO";
 
 function getClientIp(req) {
   const candidates = [

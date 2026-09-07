@@ -41,13 +41,9 @@ function audioTrack(source, options) {
     }, options));
 }
 
-var home = audioTrack('audio/poclsite.mp3', {
+var home = audioTrack('Life_Letters_-_Never_Get_Used_to_People_(mp3.pm).mp3', {
     loop: true,
     preload: true,
-    sprite: {
-        main: [100, 192000, true],
-        __default: [100, 192000, true]
-    },
     volume: 0
 });
 home.targetVolume = 0.2;

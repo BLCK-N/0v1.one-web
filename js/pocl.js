@@ -198,7 +198,12 @@ $(window).on("load", function() {
     //classes and timing for the intro animation
     $('body').removeClass('loading');
     $('body').removeClass('intro-0');
-    $('body').addClass('intro-1');
+    if ($('body').attr('id') === 'home') {
+        $('body').addClass('intro-1');
+    } else {
+        $('body').addClass('intro-d');
+        $('body').addClass('loaded');
+    }
 
     // first click enters immediately; no second click needed
     $('body').on('click', function(event){

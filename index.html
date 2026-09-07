@@ -1,45 +1,415 @@
-<html><head>
-<meta charset="utf-8"><link rel="shortcut icon" href="images/favicon2.gif">
-
-</head><body background="images/bgN6.gif">
-
-<div align="center">
-   
- <title>ï½’ï½…ï½ï½…ï½ï½‚ï½’ï½ï½Žï½ƒï½…</title>
- 
- <style type="text/css">
-body {cursor:url("images/cursor.gif"), auto;}
-</style>
- 
- <style type="text/css">
-a {cursor:url("images/cursor2.gif"), default;}
-</style>
- 
-<style>
-  img {
-   position:absolute;
-   bottom: 0px;
-   left: 20%;
-   width: 254px;
-   height: 644px;
-   margin-left: -77px;
-}
+<!DOCTYPE html><html lang="en"><head>
+  <!-- Goatcounter -->
+  <script data-goatcounter="https://itspoclv.goatcounter.com/count" async="" src="js/count.js"></script>
+  <!-- pinterest -->
+  <meta name="p:domain_verify" content="be2667134534488ef68d25cf2be02b68">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:title" content="/＠">
+	<meta name="twitter:description" content="artwork by /＠">
+	<meta property="og:image" content="images/poclshot.png">
+	<meta name="twitter:image" content="images/poclshot.png">
+	<link rel="icon" type="image/png" href="images/favicon.png">
+	<title>
+		/＠
+	</title>
   
-</style>
+  	<meta name="theme-color" content="#000">
+	<link rel="stylesheet" type="text/css" href="css/pocl.css">	
+  
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script src="js/howler.min.js"></script>
+	<script src="js/swup.min.js"></script>
+
+	<script src="js/three.min.js"></script>
+	<script src="js/gsap.min.js"></script>
+	
+	<link rel="stylesheet" type="text/css" href="css/swiper.css">
+	<script src="js/swiper.js"></script>
+</head>
+
+<body id="" class="loading intro-0"> 
+	<!--the header block is logo stuff on every page and is used for the starting animation. don't touch unless you update everywhere else too!-->
+	<header>
+		<a href="index.html">
+			<span id="logoanim">
+				<img src="images/poclsymbols.gif">
+				<img src="images/poclsymbols.gif">
+				<img src="images/poclsymbols.gif">
+				<img src="images/poclsymbols.gif">
+				<img src="images/poclsymbols.gif">
+			</span>
+			<h1 id="name"><img src="images/0v1photo.png.png" alt=""></h1>
+		</a>
+	</header>
 
 
+	<!--this is the content that changes per page! put stuff here!-->
+	<main id="content">
+		<!--this is the part that's loaded when going from page to page, 
+			anything you add should be inside the <main> element! the rest should stay as-is 
+			unless you want to make a page that doesn't use the regular template-->		
 
+		<!-- the original code for the ocean shader used on the homepage is by Jonathan Blair, i just hacked it to high hell to look trippy
+		Copyright (c) 2021 by Jonathan Blair (https://codepen.io/knoland/pen/XKxAJb)
 
-<a href="../saveweb2zip-com-fauux-neocities-org%20(8)/index.html">
-<img border="0" src="images/lainarmhold3.gif" alt="LoveLain" width="254" height="644"></a>
+		Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
+		The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-<div id="logo"> </div>
-<iframe width="0" height="0" src="//www.youtube.com/embed/l17IHiMj-_s?autoplay=1&amp;loop=1&amp;playlist=l17IHiMj-_s" frameborder="0" allowfullscreen=""></iframe>
+		THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+		-->
+		<script id="vertex-shader" type="no-js">
+			void main()	{
+				gl_Position = vec4( position, 1.0 );
+			}
+		</script>
+		<script id="fragment-shader" type="no-js">
+				uniform float iGlobalTime;
+				uniform float iChoppy;
+				uniform vec2 iResolution;
+		
+				const int NUM_STEPS = 3;
+				const float PI	 	= 3.1415;
+				const float EPSILON	= 1e-3;
+				float EPSILON_NRM	= 0.1 / iResolution.x;
+		
+				// sea variables
+				const int ITER_GEOMETRY = 1;
+				const int ITER_FRAGMENT = 1;
+				const float SEA_HEIGHT = -2.5;
+				const float SEA_SPEED = 0.5;
+				const float SEA_FREQ = 0.16;
+				const vec3 SEA_BASE = vec3(1.,0.,.1);
+				const vec3 SEA_WATER_COLOR = vec3(0.,0.,0.);
+				float SEA_TIME = iGlobalTime * SEA_SPEED;
+				mat2 octave_m = mat2(1.6,1.2,-1.2,1.6);
+		
+				mat3 fromEuler(vec3 ang) {
+					vec2 a1 = vec2(sin(ang.x),cos(ang.x));
+					vec2 a2 = vec2(sin(ang.y),cos(ang.y));
+					vec2 a3 = vec2(sin(ang.z),cos(ang.z));
+					mat3 m;
+					m[0] = vec3(
+						a1.y*a3.y+a1.x*a2.x*a3.x,
+						a1.y*a2.x*a3.x+a3.y*a1.x,
+						-a2.y*a3.x
+					);
+					m[1] = vec3(-a2.y*a1.x,a1.y*a2.y,a2.x);
+					m[2] = vec3(
+						a3.y*a1.x*a2.x+a1.y*a3.x,
+						a1.x*a3.x-a1.y*a3.y*a2.x,
+						a2.y*a3.y
+					);
+					return m;
+				}
+		
+				float hash( vec2 p ) {
+					float h = dot(p,vec2(127.1,311.7));	
+					return fract(sin(h)*43758.5453123);
+				}
+		
+				float noise( in vec2 p ) {
+					vec2 i = floor(p);
+					vec2 f = fract(p);	
+					vec2 u = f * f * (3.0 - 2.0 * f);
+					return -1.0 + 2.0 * mix(
+						mix(
+							hash(i + vec2(0.0,0.0)
+						), 
+						hash(i + vec2(1.0,0.0)), u.x),
+						mix(hash(i + vec2(0.0,1.0) ), 
+						hash(i + vec2(1.0,1.0) ), u.x), 
+						u.y
+					);
+				}
+		
+				float diffuse(vec3 n,vec3 l,float p) {
+					return pow(dot(n,l) * 0.4 + 0.6,p);
+				}
+		
+				float specular(vec3 n,vec3 l,vec3 e,float s) {    
+					float nrm = (s + 8.0) / (3.1415 * 8.0);
+					return pow(max(dot(reflect(e,n),l),0.0),s) * nrm;
+				}
+		
+				vec3 getSkyColor(vec3 e) {
+					e.y = max(e.y, 0.0);
+					vec3 ret;
+					ret.x = 0.;
+					ret.y = 0.;
+					ret.z = 0.;
+					return ret;
+				}
+		
+		
+				float sea_octave(vec2 uv, float choppy) {
+					uv += noise(uv);         
+					vec2 wv = 1.0 - abs(sin(uv));
+					vec2 swv = abs(cos(uv));    
+					wv = mix(wv, swv, wv);
+					return pow(1.0 - pow(wv.x * wv.y, 0.65), choppy);
+				}
+		
+				float map(vec3 p) {
+					float freq = SEA_FREQ;
+					float amp = SEA_HEIGHT;
+					float choppy = iChoppy;
+					vec2 uv = p.xz; 
+					uv.x *= 0.75;
+		
+					float d, h = 0.0;    
+					for(int i = 0; i < ITER_GEOMETRY; i++) {        
+						d = sea_octave((uv + SEA_TIME) * freq, choppy);
+						d += sea_octave((uv - SEA_TIME) * freq, choppy);
+						h += d * amp;        
+						uv *= octave_m;
+						freq *= 1.9; 
+						amp *= 0.22;
+						choppy = mix(choppy, 1.0, 0.2);
+					}
+					return p.y - h;
+				}
+		
+				float map_detailed(vec3 p) {
+						float freq = SEA_FREQ;
+						float amp = SEA_HEIGHT;
+						float choppy = iChoppy;
+						vec2 uv = p.xz;
+						uv.x *= 0.75;
+		
+						float d, h = 0.0;    
+						for(int i = 0; i < ITER_FRAGMENT; i++) {        
+							d = sea_octave((uv+SEA_TIME) * freq, choppy);
+							d += sea_octave((uv-SEA_TIME) * freq, choppy);
+							h += d * amp;        
+							uv *= octave_m;
+							freq *= 1.9; 
+							amp *= 0.22;
+							choppy = mix(choppy,1.0,0.2);
+						}
+						return p.y - h;
+				}
+		
+				vec3 getSeaColor(
+					vec3 p,
+					vec3 n, 
+					vec3 l, 
+					vec3 eye, 
+					vec3 dist
+				) {  
+					float fresnel = 1.0 - max(dot(n,-eye),0.0);
+					fresnel = pow(fresnel,3.0) * 0.65;
+		
+					vec3 reflected = getSkyColor(reflect(eye,n));    
+					vec3 refracted = SEA_BASE + diffuse(n,l,80.0) * SEA_WATER_COLOR * 0.12; 
+		
+					vec3 color = mix(refracted,reflected,fresnel);
+		
+					float atten = max(1.0 - dot(dist,dist) * 0.001, 0.0);
+					color += SEA_WATER_COLOR * (p.y - SEA_HEIGHT) * 0.18 * atten;
+		
+					color += vec3(specular(n,l,eye,60.0));
+		
+					return color;
+				}
+		
+				// tracing
+				vec3 getNormal(vec3 p, float eps) {
+					vec3 n;
+					n.y = map_detailed(p);    
+					n.x = map_detailed(vec3(p.x+eps,p.y,p.z)) - n.y;
+					n.z = map_detailed(vec3(p.x,p.y,p.z+eps)) - n.y;
+					n.y = eps;
+					return normalize(n);
+				}
+		
+				float heightMapTracing(vec3 ori, vec3 dir, out vec3 p) {  
+					float tm = 0.0;
+					float tx = 1000.0;    
+					float hx = map(ori + dir * tx);
+		
+					if(hx > 0.0) {
+						return tx;   
+					}
+		
+					float hm = map(ori + dir * tm);    
+					float tmid = 0.0;
+					for(int i = 0; i < NUM_STEPS; i++) {
+						tmid = mix(tm,tx, hm/(hm-hx));                   
+						p = ori + dir * tmid;                   
+						float hmid = map(p);
+						if(hmid < 0.0) {
+							tx = tmid;
+							hx = hmid;
+						} else {
+							tm = tmid;
+							hm = hmid;
+						}
+					}
+					return tmid;
+				}
+		
+				void main() {
+					vec2 uv = gl_FragCoord.xy / iResolution.xy;
+					uv = uv * 2.0 - 1.0;
+					uv.x *= iResolution.x / iResolution.y;    
+					float time = iGlobalTime * 0.3;
+		
+					// ray
+					vec3 ang = vec3(
+						sin(time*3.0)*0.1,sin(time)*0.2+0.3,time
+					);    
+					vec3 ori = vec3(0.0,3.5,time*5.0);
+					vec3 dir = normalize(
+						vec3(uv.xy,-2.0)
+					);
+					dir.z += length(uv) * 0.15;
+					dir = normalize(dir);
+		
+					// tracing
+					vec3 p;
+					heightMapTracing(ori,dir,p);
+					vec3 dist = p - ori;
+					vec3 n = getNormal(
+						p,
+						dot(dist,dist) * EPSILON_NRM
+					);
+					vec3 light = normalize(vec3(0.0,1.0,0.8)); 
+		
+					// color
+					vec3 color = mix(
+						getSkyColor(dir),
+						getSeaColor(p,n,light,dir,dist),
+						pow(smoothstep(0.0,-0.05,dir.y),0.3)
+					);
+		
+					// post
+					gl_FragColor = vec4(pow(color,vec3(0.75)), 1.0);
+				}
+		</script>
+		<script class="reloadscript">
+			var cancelAnim = false;
+			function activateSea() {
+					if (!window.WebGLRenderingContext) {
+						$('main').css('opacity', 1);
+						return;
+					}
+				container = document.getElementById('content');
+				scene = new THREE.Scene();
+				
+				camera = new THREE.PerspectiveCamera( 
+					fov, 
+					window.innerWidth / window.innerHeight, 
+					1, 
+					10000
+				);
+				camera.position.x = 20;    
+				camera.position.y = 10;    
+				camera.position.z = 20;
+				camera.lookAt(scene.position);
+				scene.add(camera);
+				
+				var axis = new THREE.AxisHelper(10);
+				scene.add (axis);
+				
+				material = new THREE.ShaderMaterial({
+					uniforms: timeUniform,
+					vertexShader: document.getElementById('vertex-shader').textContent,
+					fragmentShader: document.getElementById('fragment-shader').textContent
+				});
+				
+				var water = new THREE.Mesh(
+					new THREE.PlaneBufferGeometry(window.innerWidth, window.innerHeight, 40), material
+				);
+				scene.add(water);
+	
+					try {
+						renderer = new THREE.WebGLRenderer();
+					} catch (error) {
+						$('main').css('opacity', 1);
+						return;
+					}
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				
+				container.appendChild( renderer.domElement );
+	
+				render();
+				console.log('rendering');
+			}
 
+		    if($(window).width() >= 1500) {
+				var container, 
+						renderer, 
+						scene, 
+						camera, 
+						mesh, 
+						start = Date.now(),
+						fov = 30;
+		
+				var clock = new THREE.Clock();
+		
+				var timeUniform = {
+					iGlobalTime: {
+						type: 'f',
+						value: 0.1
+					},
+					iResolution: {
+						type: 'v2',
+						value: new THREE.Vector2()
+					}, 
+					iChoppy: { type: "f", value: -1.5 },
+				};
+		
+				timeUniform.iResolution.value.x = window.innerWidth;
+				timeUniform.iResolution.value.y = window.innerHeight;
+		
+				window.addEventListener('resize',function() {
+					camera.aspect = window.innerWidth / window.innerHeight;
+					camera.updateProjectionMatrix();
+					renderer.setSize(window.innerWidth, window.innerHeight);
+				});
+		
+				function render() {
+					timeUniform.iGlobalTime.value += clock.getDelta();
+					renderer.render(scene, camera);
+					if(!cancelAnim) {
+						requestAnimationFrame(render);
+					}
+				}
 
+				console.log('sea complete');
+				$('main canvas').remove();
+				activateSea();
+				$('main').css('opacity', 1);
+			}
+		</script>
+	</main>
 
-
-</div>
+	<!--nav stuff on every page - don't touch unless you update everywhere else too!-->
+	<nav>
+		<a href="about.html">
+			<span><img src="images/logo.png"></span>
+			<span>about</span>
+		</a>
+		<a href="links.html">
+			<span><img src="images/braket.png"></span>
+			<span>links</span>
+		</a>
+		<a href="art.html">
+			<span><img src="images/eye.png"></span>
+			<span>art</span>
+		</a>
+		<a href="donate.html">
+			<span><img src="images/cash.png"></span>
+			<span>donate</span>
+		</a>
+		<a href="pests.html">
+			<span><img src="images/pest.png"></span>
+			<span>favorite music</span>
+		</a>
+	</nav>
+	<script src="js/pocl.js"></script>
 
 </body></html>

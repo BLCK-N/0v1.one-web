@@ -207,13 +207,13 @@ $(window).on("load", function() {
             return;
         }
 
-        if (audioAvailable && currentTheme && typeof currentTheme.play === 'function') {
-            gallerySfx.play();
+        if (currentTheme && typeof currentTheme.play === 'function') {
             currentTheme.play();
             currentTheme.fade(0, currentTheme.targetVolume, 2000);
         }
 
-        //also assign some sfx here
+        //also assign some sfx
+        if (audioAvailable) gallerySfx.play(); here
         $('header a, nav a, #credit-link').on('mouseup', function(){
             clickSfx.play();
         })

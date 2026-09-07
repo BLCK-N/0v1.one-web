@@ -1,0 +1,40 @@
+/* MARQUEE ELEMENT - just a span inside a div that gets duplicated in js */
+.marquee {
+    position: relative;
+    overflow: hidden;
+    white-space: nowrap;
+    --marquee_speed: 5s;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    text-transform:uppercase;
+}
+
+.marquee-wrapper > span {
+    padding-right: 0.5em;
+    animation: MARQ var(--marquee_speed) linear infinite;
+    display: inline-block;
+    white-space: nowrap;
+    position: absolute;
+    pointer-events: none;
+    left: 0;
+    --marquee_offset: 0%;
+}
+
+.nospaces .marquee-wrapper > span {
+    padding-right: 0em;
+}
+
+.marquee-wrapper > span:nth-child(3) {
+    --marquee_offset: 100%;
+}
+
+.marquee-wrapper > span:first-child {
+    position: relative;
+    animation: unset;
+    opacity: 0;
+    pointer-events: initial;
+}  
+
+@keyframes MARQ {
+    0% {transform: translateX(var(--marquee_offset))}
+    100% {transform: translateX(calc(-100% + var(--marquee_offset)))}
+}

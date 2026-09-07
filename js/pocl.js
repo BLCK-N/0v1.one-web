@@ -213,7 +213,7 @@ $(window).on("load", function() {
         }
 
         //also assign some sfx
-        if (audioAvailable) gallerySfx.play(); here
+        if (audioAvailable) gallerySfx.play();
         $('header a, nav a, #credit-link').on('mouseup', function(){
             clickSfx.play();
         })

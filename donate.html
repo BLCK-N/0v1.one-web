@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="/@ | donate">
+  <meta name="twitter:description" content="support /@">
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <title>/@ | donate</title>
+  <meta name="theme-color" content="#000">
+  <link rel="stylesheet" type="text/css" href="css/pocl.css">
+  <script type="text/javascript" src="js/jquery.min.js"></script>
+  <script src="js/howler.min.js"></script>
+  <script src="js/swup.min.js"></script>
+  <script src="js/three.min.js"></script>
+  <script src="js/gsap.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="css/swiper.css">
+  <script src="js/swiper.js"></script>
+</head>
+<body id="donate" class="loading intro-0">
+  <header>
+    <a href="index.html">
+      <span id="logoanim">
+        <img src="images/poclsymbols.gif">
+        <img src="images/poclsymbols.gif">
+        <img src="images/poclsymbols.gif">
+        <img src="images/poclsymbols.gif">
+        <img src="images/poclsymbols.gif">
+      </span>
+      <h1 id="name"><img src="images/0v1photo.png.png" alt=""></h1>
+    </a>
+  </header>
+
+  <main id="content">
+    <section class="donate-panel">
+      <h2>donate</h2>
+      <p>click an icon to copy the wallet address.</p>
+      <div class="wallet-grid">
+        <button class="wallet-card" type="button" data-wallet="bc1plw8297ne5hxjs55chvza2fwcj2h47x5ss8nrcc8vp9pkvj37h4wqw2nts8">
+          <img src="images/icons8-bitcoin-transparent.png" alt="Bitcoin">
+          <span>Bitcoin</span>
+        </button>
+        <button class="wallet-card" type="button" data-wallet="0xB7A28e253eeB59bB0D9C4aAbc4d8A10f7760b031">
+          <img src="images/icons8-ethereum-96.png" alt="Ethereum">
+          <span>Ethereum</span>
+        </button>
+        <button class="wallet-card" type="button" data-wallet="BCym38S8CCMaT58gMagA81EB9NV8wFWBUf3tRMG1a67A">
+          <img src="images/icons8-solana-96.png" alt="Solana">
+          <span>Solana</span>
+        </button>
+        <button class="wallet-card" type="button" data-wallet="BCym38S8CCMaT58gMagA81EB9NV8wFWBUf3tRMG1a67A">
+          <img src="images/icons8-tether-96.png" alt="Tether USDT">
+          <span>Tether USDT</span>
+        </button>
+        <button class="wallet-card" type="button" data-wallet="0xB7A28e253eeB59bB0D9C4aAbc4d8A10f7760b031">
+          <img src="images/icons8-litecoin-96.png" alt="Litecoin">
+          <span>Litecoin</span>
+        </button>
+      </div>
+      <p class="wallet-status" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <nav>
+    <a href="about.html"><span><img src="images/logo.png"></span><span>about</span></a>
+    <a href="links.html"><span><img src="images/braket.png"></span><span>links</span></a>
+    <a href="art.html"><span><img src="images/eye.png"></span><span>art</span></a>
+    <a href="donate.html"><span><img src="images/cash.png"></span><span>donate</span></a>
+    <a href="pests.html"><span><img src="images/pest.png"></span><span>favorite music</span></a>
+  </nav>
+
+  <script src="js/pocl.js"></script>
+  <script>
+    document.querySelectorAll('.wallet-card').forEach(function (card) {
+      card.addEventListener('click', async function () {
+        const address = card.dataset.wallet;
+        const status = document.querySelector('.wallet-status');
+        try {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(address);
+          } else {
+            const helper = document.createElement('textarea');
+            helper.value = address;
+            helper.setAttribute('readonly', '');
+            helper.style.position = 'fixed';
+            helper.style.opacity = '0';
+            document.body.appendChild(helper);
+            helper.select();
+            document.execCommand('copy');
+            helper.remove();
+          }
+          status.textContent = 'wallet copied';
+        } catch (error) {
+          status.textContent = address;
+        }
+        window.setTimeout(function () { status.textContent = ''; }, 2200);
+      });
+    });
+  </script>
+</body>
+</html>

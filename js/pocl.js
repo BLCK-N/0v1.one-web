@@ -178,11 +178,11 @@ $(window).on("load", function() {
         pocl.cursor = { x: e.clientX, y: e.clientY }
     })
 
-    //shortcut to add the credit link to every page
+    // Add the decorative icon without making it a navigation link.
 	$('body').append(
-		`<a id='credit-link' href='dev.html'>
+		`<span id='credit-link' aria-hidden='true'>
             <i></i>
-		</a>`
+		</span>`
 	);
 
     //assigns the body an ID used to determine styling
